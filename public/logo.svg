@@ -1,0 +1,9 @@
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <clipPath id="circleClip">
+      <circle cx="100" cy="100" r="98" />
+    </clipPath>
+  </defs>
+  <rect width="200" height="200" rx="24" fill="#FFFDF8" />
+  <image href="/vici-logo.jpg" xlink:href="/vici-logo.jpg" x="2" y="2" width="196" height="196" preserveAspectRatio="xMidYMid meet" />
+</svg>

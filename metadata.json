@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Remix Remix Remix VICI Yoga Therapy Training Center",
+  "description": "Trung tâm Đào tạo \u0026 Yoga Trị liệu VICI - Thấu hiểu cơ thể, chuyển hóa từ bên trong cùng Master Henry Phan và đội ngũ chuyên gia",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
