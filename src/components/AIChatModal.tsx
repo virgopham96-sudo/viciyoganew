@@ -352,8 +352,8 @@ export default function AIChatModal({
     setIsLoading(true);
 
     try {
-      // Build conversation history for API
-      const apiHistory = newHistory.map((m) => ({
+      // Build conversation history for API (prior messages only)
+      const apiHistory = currentHistory.map((m) => ({
         role: m.sender === 'user' ? 'user' : 'model',
         text: m.text,
       }));

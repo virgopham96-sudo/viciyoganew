@@ -43,7 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const conversationHistory = body?.conversationHistory || body?.history || [];
     
-    // Allow adequate time for Gemini to generate response (up to 20s)
+    // Allow adequate time for Gemini to generate response (safe for Vercel Hobby 10s limit)
     const chatPromise = processChatConsultation(message, conversationHistory);
     const timeoutPromise = new Promise<{
       reply: string;
@@ -59,7 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             source: 'local_expert',
             isAiActive: false,
           }),
-        20000
+        8000
       )
     );
 

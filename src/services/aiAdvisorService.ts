@@ -17,7 +17,11 @@ let geminiClient: GoogleGenAI | null = null;
 const modelQuotaCooldown: Record<string, number> = {};
 
 export function getGeminiClient(): GoogleGenAI | null {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey =
+    process.env.GEMINI_API_KEY ||
+    process.env.VITE_GEMINI_API_KEY ||
+    process.env.GOOGLE_API_KEY ||
+    process.env.GOOGLE_GENAI_API_KEY;
   if (!apiKey || apiKey === 'MY_GEMINI_API_KEY' || apiKey.trim() === '') {
     return null;
   }
@@ -96,10 +100,9 @@ export async function processChatConsultation(
   const ai = getGeminiClient();
 
   if (ai) {
-    // Primary model: gemini-2.5-flash for optimized speed and reduced token usage
+    // Primary models: gemini-2.5-flash with thinkingBudget: 0 for ultra-fast (1-2s) responses on Vercel
     const candidateModels = [
       'gemini-2.5-flash',
-      'gemini-2.5-flash-lite',
       'gemini-3.1-flash-lite',
       'gemini-3.8-flash',
     ];
@@ -129,11 +132,17 @@ export async function processChatConsultation(
       }
     }
 
-    // Append current user message
-    if (contents.length > 0 && contents[contents.length - 1].role === 'user') {
-      contents[contents.length - 1].parts[0].text += `\n${trimmedMessage}`;
-    } else {
-      contents.push({ role: 'user', parts: [{ text: trimmedMessage }] });
+    // Append current user message if not already the last entry
+    const lastContentText = contents.length > 0 && contents[contents.length - 1].role === 'user'
+      ? contents[contents.length - 1].parts[0].text
+      : '';
+
+    if (lastContentText !== trimmedMessage) {
+      if (contents.length > 0 && contents[contents.length - 1].role === 'user') {
+        contents[contents.length - 1].parts[0].text += `\n${trimmedMessage}`;
+      } else {
+        contents.push({ role: 'user', parts: [{ text: trimmedMessage }] });
+      }
     }
 
     const now = Date.now();
@@ -143,19 +152,21 @@ export async function processChatConsultation(
       }
 
       try {
-        // Request content generation with function calling
+        // Request content generation with function calling and thinkingBudget: 0 for lightning-fast Vercel response
         const responsePromise = ai.models.generateContent({
           model: modelName,
           contents,
           config: {
             systemInstruction: VICI_CARE_SYSTEM_PROMPT,
             temperature: 0.5,
+            thinkingConfig: { thinkingBudget: 0 },
+            maxOutputTokens: 800,
             tools: [{ functionDeclarations: [saveContactLeadDeclaration] }],
           },
         });
 
         const timeoutPromise = new Promise<null>((resolve) =>
-          setTimeout(() => resolve(null), 18000)
+          setTimeout(() => resolve(null), 7000)
         );
 
         const response = await Promise.race([responsePromise, timeoutPromise]);
@@ -226,6 +237,8 @@ export async function processChatConsultation(
                 config: {
                   systemInstruction: VICI_CARE_SYSTEM_PROMPT,
                   temperature: 0.5,
+                  thinkingConfig: { thinkingBudget: 0 },
+                  maxOutputTokens: 800,
                   tools: [{ functionDeclarations: [saveContactLeadDeclaration] }],
                 },
               });
@@ -405,10 +418,12 @@ YÊU CẦU ĐỊNH DẠNG BÁO CÁO (Trình bày súc tích, chuyên nghiệp, r
 `;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
+        model: 'gemini-2.5-flash',
         contents: [{ role: 'user', parts: [{ text: summaryPrompt }] }],
         config: {
-          temperature: 0.3
+          temperature: 0.3,
+          thinkingConfig: { thinkingBudget: 0 },
+          maxOutputTokens: 1000
         }
       });
 

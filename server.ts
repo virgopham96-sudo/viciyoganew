@@ -25,7 +25,11 @@ app.use(express.static(path.join(process.cwd(), 'public')));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  const apiKey = process.env.GEMINI_API_KEY;
+  const apiKey =
+    process.env.GEMINI_API_KEY ||
+    process.env.VITE_GEMINI_API_KEY ||
+    process.env.GOOGLE_API_KEY ||
+    process.env.GOOGLE_GENAI_API_KEY;
   const hasGeminiKey = !!apiKey && apiKey !== 'MY_GEMINI_API_KEY' && apiKey.trim() !== '';
 
   res.json({
@@ -33,6 +37,13 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
     geminiAvailable: hasGeminiKey,
     hasApiKeyConfigured: hasGeminiKey,
+    configuredKeyName: process.env.GEMINI_API_KEY
+      ? 'GEMINI_API_KEY'
+      : process.env.VITE_GEMINI_API_KEY
+      ? 'VITE_GEMINI_API_KEY'
+      : process.env.GOOGLE_API_KEY
+      ? 'GOOGLE_API_KEY'
+      : null,
     environment: 'node_server'
   });
 });

@@ -363,7 +363,29 @@ Nếu bạn cần hỗ trợ khẩn cấp, bạn cũng có thể gọi trực ti
 👉 Bạn dự định ghé thăm trung tâm vào ngày nào trong tuần? Hãy nhắn **Họ tên + SĐT/Zalo** để VICI đón tiếp và chuẩn bị không gian chu đáo nhất nhé!`;
   }
 
-  // 10. MẶC ĐỊNH — TƯ VẤN NHANH & THU THẬP THÔNG TIN ĐẦU VÀO CHO HLV
+  // 10. TIỀN SỬ CHẤN THƯƠNG, GÃY TAY/CHÂN, PHẪU THUẬT, BÓ BỘT
+  if (
+    lower.includes('gãy') ||
+    lower.includes('chấn thương') ||
+    lower.includes('phẫu thuật') ||
+    lower.includes('tai nạn') ||
+    lower.includes('bó bột') ||
+    lower.includes('đóng đinh') ||
+    lower.includes('vết mổ') ||
+    lower.includes('dây chằng')
+  ) {
+    return `Namaste bạn! Với tiền sử chấn thương hoặc gãy xương (như gãy tay/chân) đã qua một thời gian, cấu trúc xương về cơ bản đã can liền. **Bạn hoàn toàn có thể tập Yoga phục hồi trị liệu**, thậm chí Yoga là một trong những phương pháp an toàn và hiệu quả nhất để phục hồi chức năng!
+
+🌿 **Lời khuyên chuyên môn từ Master Henry Phan:**
+1. **Phục hồi tầm vận động (ROM):** Sau chấn thương và bất động lâu ngày, các nhóm cơ và bao khớp xung quanh thường bị co rút hoặc teo nhẹ. Yoga trị liệu giúp kéo giãn nhẹ nhàng và lấy lại góc cử động tự nhiên.
+2. **Không ép lực tỳ đè sớm:** Tuyệt đối chưa vào các thế chống chịu toàn bộ trọng lượng cơ thể (như Plank, Chống đẩy Chaturanga, Chó úp mặt dồn lực) lên bên tay/chân từng chấn thương nếu cơ cổ tay và cẳng tay chưa đủ khỏe.
+3. **Thăm khám trước khi tập:** Bạn nên tham gia 01 buổi **Scan Đánh giá tầm vận động và cơ năng 1-1** cùng Master Henry Phan để kiểm tra góc gập duỗi và thiết kế chuỗi bài tập an toàn riêng biệt.
+
+👉 Bạn bị chấn thương ở vị trí nào và hiện tại cử động có còn cảm thấy ê buốt hay vướng khớp không?
+Bạn vui lòng nhắn **Họ tên + SĐT/Zalo** để Master Henry Phan liên hệ tư vấn trực tiếp và hướng dẫn bạn cách bảo vệ khớp khi tập nhé!`;
+  }
+
+  // 11. MẶC ĐỊNH — TƯ VẤN NHANH & THU THẬP THÔNG TIN ĐẦU VÀO CHO HLV
   return `Namaste bạn! Rất vui được đồng hành cùng bạn. Tôi là **MyVici** – Trợ lý Chuyên môn của VICI Yoga Therapy do Master Henry Phan sáng lập. 🙏
 
 🌿 **Các dịch vụ trị liệu & đào tạo cốt lõi tại VICI:**
