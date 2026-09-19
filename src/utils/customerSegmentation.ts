@@ -95,6 +95,20 @@ export const SEGMENT_PROFILES: Record<LeadCategory, SegmentProfile> = {
       'Thiết lập thói quen vận động đúng tư thế'
     ]
   },
+  RECOVERY_THERAPY: {
+    category: 'RECOVERY_THERAPY',
+    categoryLabel: 'Phục Hồi Trị Liệu & ROM Test',
+    defaultInterest: 'Kiểm tra Tầm Vận Động (ROM Test) & Phục Hồi Chức Năng',
+    recommendedCourse: 'Kiểm Tra Tầm Vận Động (ROM Test) & Trải Nghiệm Buổi Tập Thử',
+    recommendedSchedule: 'Ca Sáng (06:30 - 07:30) hoặc Ca Tối (19:00 - 20:00)',
+    assignedTo: 'Master Mỹ Kiều',
+    standardGoals: [
+      'Đánh giá tầm vận động khớp và tầm soát điểm co thắt',
+      'Kéo giãn trục dọc giải áp đốt sống và đĩa đệm',
+      'Tập luyện an toàn theo định tuyến chuẩn Kinesiology',
+      'Tái lập cân bằng hệ cơ xương khớp'
+    ]
+  },
   GENERAL_INQUIRY: {
     category: 'GENERAL_INQUIRY',
     categoryLabel: 'Tìm Hiểu Thông Tin & Lịch Tập',

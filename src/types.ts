@@ -5,6 +5,7 @@ export type LeadStatus = 'New' | 'Contacted' | 'Consulting' | 'Trial' | 'Enrolle
 export type LeadCategory = 
   | 'BEGINNER' 
   | 'THERAPY_INTEREST' 
+  | 'RECOVERY_THERAPY'
   | 'ADVANCED' 
   | 'TRAINER_EDUCATION' 
   | 'WORKSHOP' 
@@ -58,7 +59,7 @@ export interface Lead {
   name: string;
   phone: string;
   email?: string;
-  source: 'Website Form' | 'VICI AI Advisor' | 'Direct Consultation' | 'VICI AI Chatbot';
+  source: 'Website Form' | 'VICI AI Advisor' | 'Direct Consultation' | 'VICI AI Chatbot' | 'Vici Care AI Advisor';
   interest: string;
   category: LeadCategory;
   experience?: string;

@@ -6,7 +6,7 @@
  */
 
 import { GoogleGenAI, Type } from '@google/genai';
-import { VICI_CARE_SYSTEM_PROMPT, VICI_SYSTEM_PROMPT, getViciConsultation } from '../data/viciAdvisor';
+import { VICI_CARE_SYSTEM_PROMPT, VICI_SYSTEM_PROMPT, getViciConsultation, extractLeadFromText } from '../data/viciAdvisor';
 import { AIConsultationReport } from '../types';
 import { analyzeCustomerSegmentAndSchedule } from '../utils/customerSegmentation';
 import { saveOrUpdateLead } from './leadStorage';
@@ -91,7 +91,7 @@ export async function processChatConsultation(
   const trimmedMessage = (message || '').trim();
   if (!trimmedMessage) {
     return {
-      reply: 'Namaste bạn! 🙏 Mình là MyVici – Chuyên viên tư vấn phục hồi và trị liệu của Vici Yoga Therapy. Bạn đang gặp vấn đề gì về cơ xương khớp hay cần tư vấn lớp tập phù hợp không ạ?',
+      reply: 'Namaste bạn! 🙏 Mình là Vici Care – Chuyên viên tư vấn phục hồi và trị liệu của Vici Yoga Therapy. Bạn đang gặp vấn đề gì về cơ xương khớp hay cần tư vấn lớp tập phù hợp không ạ?',
       source: 'local_expert',
       isAiActive: false,
     };
@@ -191,7 +191,7 @@ export async function processChatConsultation(
                 if (args.phone) {
                   try {
                     capturedLead = saveOrUpdateLead({
-                      name: args.fullName || 'Học viên tư vấn MyVici',
+                      name: args.fullName || 'Học viên tư vấn Vici Care',
                       phone: args.phone,
                       interest: args.serviceInterest || args.healthCondition || 'Yoga Trị liệu Phục hồi',
                       category: 'THERAPY_INTEREST',
@@ -199,11 +199,11 @@ export async function processChatConsultation(
                       goals: args.healthCondition
                         ? [args.healthCondition]
                         : ['Kiểm tra tầm vận động (ROM test)', 'Tập thử phục hồi'],
-                      source: 'VICI AI Advisor',
-                      conversationSummary: `Đăng ký qua MyVici AI: Bệnh lý/Tình trạng: ${args.healthCondition || 'Cần kiểm tra'}. Lớp quan tâm: ${args.serviceInterest || 'Lớp trị liệu'}. Giờ tập: ${args.preferredTime || 'Linh hoạt'}.`,
+                      source: 'Vici Care AI Advisor',
+                      conversationSummary: `Đăng ký qua Vici Care AI: Bệnh lý/Tình trạng: ${args.healthCondition || 'Cần kiểm tra'}. Lớp quan tâm: ${args.serviceInterest || 'Lớp trị liệu'}. Giờ tập: ${args.preferredTime || 'Linh hoạt'}.`,
                     });
                   } catch (saveErr) {
-                    console.warn('[MyVici] Lỗi lưu lead:', saveErr);
+                    console.warn('[Vici Care] Lỗi lưu lead:', saveErr);
                   }
                 }
               }
@@ -223,7 +223,7 @@ export async function processChatConsultation(
                         name: 'save_contact_lead',
                         response: {
                           status: 'success',
-                          message: 'Thông tin học viên đã được ghi nhận thành công vào hệ thống MyVici. Huấn luyện viên chuyên môn sẽ liên hệ sớm qua Zalo/Điện thoại.',
+                          message: 'Thông tin học viên đã được ghi nhận thành công vào hệ thống VICI. Huấn luyện viên chuyên môn sẽ liên hệ sớm qua Zalo/Điện thoại.',
                         },
                       },
                     },
@@ -254,7 +254,7 @@ export async function processChatConsultation(
                 };
               }
             } catch (errFollowUp) {
-              console.warn('[MyVici] Follow up tool error:', errFollowUp);
+              console.warn('[Vici Care] Follow up tool error:', errFollowUp);
             }
           }
 
@@ -263,16 +263,18 @@ export async function processChatConsultation(
             const replyText = response.text.trim();
             if (replyText) {
               // Safety check: if user message contained phone number, also store lead
-              const phoneMatch = trimmedMessage.match(/(0\d{9,10}|\+84\d{9,10}|\d{4}[\s.-]?\d{3}[\s.-]?\d{3})/);
-              if (phoneMatch && !capturedLead) {
+              const extracted = extractLeadFromText(trimmedMessage);
+              if (extracted && extracted.phone && !capturedLead) {
                 try {
                   capturedLead = saveOrUpdateLead({
-                    name: 'Học viên tư vấn MyVici',
-                    phone: phoneMatch[0],
-                    interest: 'Yoga Trị liệu Phục hồi',
+                    name: extracted.fullName || 'Học viên tư vấn Vici Care',
+                    phone: extracted.phone,
+                    interest: extracted.serviceInterest || 'Yoga Trị liệu Phục hồi',
                     category: 'THERAPY_INTEREST',
-                    source: 'VICI AI Advisor',
-                    conversationSummary: `Khách hàng cung cấp SĐT qua MyVici AI: "${trimmedMessage}"`,
+                    preferredTime: extracted.preferredTime || 'Linh hoạt',
+                    goals: [extracted.healthCondition || 'Tư vấn phục hồi'],
+                    source: 'Vici Care AI Advisor',
+                    conversationSummary: `Khách hàng cung cấp SĐT qua Vici Care AI: "${trimmedMessage}"`,
                   });
                 } catch (_) {}
               }
@@ -294,7 +296,7 @@ export async function processChatConsultation(
         if (errStatus === 429 || errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED')) {
           modelQuotaCooldown[modelName] = Date.now() + 60000;
         }
-        console.warn(`[MyVici AI] Model ${modelName} notice:`, errStatus || errMsg);
+        console.warn(`[Vici Care AI] Model ${modelName} notice:`, errStatus || errMsg);
       }
     }
   }
